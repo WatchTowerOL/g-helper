@@ -708,14 +708,16 @@ namespace GHelper.USB
         {
 
             static int tempFreeze = AppConfig.Get("temp_freeze", 20);
-            static int tempCold = AppConfig.Get("temp_cold", 40);
-            static int tempWarm = AppConfig.Get("temp_warm", 65);
+            static int tempCold = AppConfig.Get("temp_cold", 65);
+            static int tempWarm = AppConfig.Get("temp_warm", 80);
             static int tempHot = AppConfig.Get("temp_hot", 90);
+            static int tempDanger = AppConfig.Get("temp_danger", 95);
 
-            static Color colorFreeze = ColorTranslator.FromHtml(AppConfig.GetString("color_freeze", "#0000FF")); 
-            static Color colorCold = ColorTranslator.FromHtml(AppConfig.GetString("color_cold", "#008000"));
-            static Color colorWarm = ColorTranslator.FromHtml(AppConfig.GetString("color_warm", "#FFFF00"));
-            static Color colorHot = ColorTranslator.FromHtml(AppConfig.GetString("color_hot", "#FF0000"));
+            static Color colorFreeze = ColorTranslator.FromHtml(AppConfig.GetString("color_freeze", "#FFFFFF")); 
+            static Color colorCold = ColorTranslator.FromHtml(AppConfig.GetString("color_cold", "#0000FF"));
+            static Color colorWarm = ColorTranslator.FromHtml(AppConfig.GetString("color_warm", "#8400FF"));
+            static Color colorHot = ColorTranslator.FromHtml(AppConfig.GetString("color_hot", "#FFFF00"));
+            static Color colorDanger = ColorTranslator.FromHtml(AppConfig.GetString("color_danger", "#FF0000"));
 
             static Color colorUltimate = ColorTranslator.FromHtml(AppConfig.GetString("color_ultimate", "#FF0000"));
             static Color colorStandard = ColorTranslator.FromHtml(AppConfig.GetString("color_standard", "#FFFF00"));
@@ -751,10 +753,11 @@ namespace GHelper.USB
                 float cpuTemp = (float)HardwareControl.GetCPUTemp();
                 Color color = colorFreeze;
 
-                if (cpuTemp < tempCold) color = ColorUtils.GetWeightedAverage(colorFreeze, colorCold, ((float)cpuTemp - tempFreeze) / (tempCold - tempFreeze));
-                else if (cpuTemp < tempWarm) color = ColorUtils.GetWeightedAverage(colorCold, colorWarm, ((float)cpuTemp - tempCold) / (tempWarm - tempCold));
-                else if (cpuTemp < tempHot) color = ColorUtils.GetWeightedAverage(colorWarm, colorHot, ((float)cpuTemp - tempWarm) / (tempHot - tempWarm));
-                else color = colorHot;
+                if (cpuTemp < tempCold) color = colorFreeze;
+                else if (cpuTemp < tempWarm) color = colorCold;
+                else if (cpuTemp < tempHot) color = colorWarm;
+                else if (cpuTemp < tempDanger) color = colorHot;
+                else color = colorDanger;
 
                 ApplyDirect(color, init);
             }
